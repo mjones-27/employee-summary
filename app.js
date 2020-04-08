@@ -9,10 +9,81 @@ const OUTPUT_DIR = path.resolve(__dirname, "output")
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 ​
 const render = require("./lib/htmlRenderer");
+
+const employeeArr = [];
 ​
 ​
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+newEmployee();
+
+function newEmployee(){
+    inquirer.prompt([
+        {
+            type:"input",
+            message:"Employee name: ",
+            name:"name"
+        },
+        {
+            type:"input",
+            message:"Employee ID: ",
+            name:"id"
+        },
+        {
+            type:"input",
+            message:"Employee email: ",
+            name:"email"
+        },
+        {
+            type:"list",
+            message:"Employee role: ",
+            choices:["Engineer","Inetrn","Manager"],
+            name:"employeeRole"
+        },
+    ]).then(function(response){
+        switch(response.employeeRole){
+            case "Intern":
+                inquirer.prompt([
+                    {
+                        type:"input",
+                        message:"What school do they attend? ",
+                        name: "school"
+                    }
+                ]).then(function(res){
+                    let newHire = new Intern(response.id, response.name, response.email, response.school);
+                    employeeArr.push(newHire);
+
+                })
+            break;
+            case "Engineer":
+                inquirer.prompt([
+                    {
+                        type:"input",
+                        message:"What is their Github username? ",
+                        name: "gitURL"
+                    }
+                ]).then(function(res){
+                    let newHire = new Engineer(response.id, response.name, response.email, response.gitURL);
+                    employeeArr.push(newHire);
+
+                })
+            break;
+            case "Manager":
+                inquirer.prompt([
+                    {
+                        type:"input",
+                        message:"What is their office number? ",
+                        name: "office"
+                    }
+                ]).then(function(res){
+                    let newHire = new Manager(response.id, response.name, response.email, response.office);
+                    employeeArr.push(newHire);
+
+                })
+            break;
+        }
+    })
+}
 ​
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
